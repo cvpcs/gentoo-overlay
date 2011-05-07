@@ -1,0 +1,77 @@
+#!/sbin/runscript
+
+getModulePos()
+{
+    lsmod | awk '{print $1}' | nl | grep "$1" | awk '{print $1}'
+}
+
+reloadModules()
+{
+    rmmod asus_oled &>/dev/null
+    rmmod usbhid
+    modprobe asus_oled
+    modprobe usbhid
+}
+
+checkModulesOrder()
+{
+    usbhidpos=`getModulePos usbhid`
+    asusoledpos=`getModulePos asus_oled`
+    
+    if [ -z "$usbhidpos" ]; then
+	if [ -z "$asusoledpos" ]; then
+	    modprobe asus_oled
+	fi
+    else
+	if [ -z "$asusoledpos" ]; then
+	    reloadModules
+	elif [ "$asusoledpos" -lt "$usbhidpos" ]; then
+	    reloadModules
+	fi
+    fi
+}
+
+checkKernelVersion()
+{
+    kernelversion=`uname -r`
+    
+    MAJ=`awk -F'[-._]' '{print $1}' <<< $kernelversion`
+    MIN=`awk -F'[-._]' '{print $2}' <<< $kernelversion`
+    REL=`awk -F'[-._]' '{print $3}' <<< $kernelversion`
+    
+    VER=$((MAJ*1000000+MIN*1000+REL))
+    
+    # if before 2.6.28 return 1 else return 0    
+    if [ $VER -lt 2006028 ]; then
+	if [ $VER -lt 2006027 ]; then
+	    echo -e "\n*** You should upgrade the kernel to at least 2.6.27 to take full benefit of the Asus G50/G70 hardware\n" >&2
+	fi
+	
+	return 1
+    fi
+    
+    return 0
+}
+
+start()
+{
+	ebegin "Starting ASUS G50 OLED"
+
+	checkKernelVersion || checkModulesOrder
+	
+	# By default the value there is 0 although the led is lit
+	echo 1 > "/sys/class/leds/asus::touchpad/brightness" &>/dev/null
+	
+	/opt/leds/start.sh &
+
+	eend $? "Failed to start ASUS G50 OLED"
+}
+
+stop()
+{
+	ebegin "Stopping ASUS G50 OLED"
+
+	/opt/leds/stop.sh
+
+	eend $? "Failed to stop ASUS G50 OLED"
+}

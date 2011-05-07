@@ -1,0 +1,11 @@
+--- src/wizardpen.c	2009-05-09 03:48:20.725810940 -0500
++++ src/wizardpen.c.new	2009-05-09 03:48:54.694718220 -0500
+@@ -486,8 +486,6 @@
+      * If something went wrong, cleanup and return NULL
+      */
+ SetupProc_fail:
+-    if ((local) && (local->fd))
+-        xf86CloseSerial (local->fd);
+     if ((priv) && (priv->buffer))
+         XisbFree (priv->buffer);
+     if (priv)

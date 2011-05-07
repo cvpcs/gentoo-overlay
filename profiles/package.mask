@@ -1,0 +1,11 @@
+# still has problems with cross-path compatibility
+games-emulation/dolphin-emu
+
+# broken
+x11-apps/xmacro
+
+# SVN
+=games-arcade/smc-9999
+=media-video/asusg50oled-9999
+=games-emulation/pcsx-df-9999
+=games-emulation/pcsxr-20090130

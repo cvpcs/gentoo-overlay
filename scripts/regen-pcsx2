@@ -1,0 +1,21 @@
+#!/bin/bash
+
+EMERGE=`which emerge`
+EIX=`which eix`
+
+if [ -z "${EMERGE}" ] ; then
+	echo "emerge not found"
+	exit
+fi
+if [ -z "${EIX}" ] ; then
+	echo "eix not found"
+	exit
+fi
+
+PACKAGES="pcsx2"
+
+for i in `${EIX} -Ic ps2emu | grep ps2emu | grep 9999 | awk '{print $2}'`; do
+	PACKAGES="${PACKAGES} ${i}"
+done
+
+${EMERGE} $@ ${PACKAGES}

@@ -1,0 +1,11 @@
+--- ps2hw.fx	2009-03-26 22:07:30.329677981 -0500
++++ ps2hw.fx.new	2009-03-26 22:12:45.464876157 -0500
+@@ -716,7 +716,7 @@
+ 	float finter = texRECT(g_sInterlace, ointerpos.yy).x;
+ 	clip(finter * g_fOneColor.z + g_fOneColor.w);
+ 
+-	half4 c = BilinearFloat16(tex0);
++	float4 c = BilinearFloat16(tex0);
+ 	c.w = g_fc0.w*c.w * g_fOneColor.x + g_fOneColor.y;
+ 	return c;
+ }

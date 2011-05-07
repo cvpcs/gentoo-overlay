@@ -1,0 +1,7 @@
+# ChangeLog for dev-php5/pecl-runkit
+# Copyright 1999-2007 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+  03 Dec 2007; Jakub Moc <jakub@gentoo.org> pecl-runkit-0.9-r1.ebuild:
+  Fix LICENSE, install README
+
