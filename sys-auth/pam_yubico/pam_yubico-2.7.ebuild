@@ -5,7 +5,7 @@
 DESCRIPTION="This module allows you to use the Yubikey device to authenticate to the PAM system."
 SRC_URI="http://yubico-pam.googlecode.com/files/${P}.tar.gz"
 HOMEPAGE="http://code.google.com/p/yubico-pam/"
-KEYWORDS="x86 amd64"
+KEYWORDS="~x86 ~amd64"
 SLOT="0"
 LICENSE="|| ( BSD GPL-2 )"
 IUSE=""
