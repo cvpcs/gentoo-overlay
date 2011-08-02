@@ -36,9 +36,9 @@ src_install() {
 
 	exeinto "${dir}"
 	if use amd64 ; then
-		newexe ${MY_PN}_32 ${MY_PN} || die
-	elif use x86 ; then
 		newexe ${MY_PN}_64 ${MY_PN} || die
+	elif use x86 ; then
+		newexe ${MY_PN}_32 ${MY_PN} || die
 	else
 		die "${PN} only supports amd64 and x86 architecture"
 	fi
