@@ -12,12 +12,13 @@ IUSE=""
 
 DEPEND="sys-auth/pambase
 	sys-libs/pam
-	sys-libs/libyubikey-client"
+	>=sys-auth/libyubikey-1.5
+	>=sys-auth/ykclient-2.4
+	sys-auth/ykpers"
 
 RDEPEND="${DEPEND}"
 
 RESTRICT="mirror"
-
 
 src_compile() {
 	econf \
