@@ -11,8 +11,10 @@ SRC_URI=""
 LICENSE=""
 SLOT="3"
 KEYWORDS="amd64 x86"
-IUSE="+vvvvvv"
+IUSE="+ayim +crayon +vvvvvv"
 
 RDEPEND="
+	ayim? ( =games-arcade/ayim-1.2.0* )
+	crayon? ( =games-puzzle/crayon-55* )
 	vvvvvv? ( =games-arcade/vvvvvv-2.01* )"
 DEPEND=""

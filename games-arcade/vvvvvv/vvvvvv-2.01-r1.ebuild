@@ -21,15 +21,9 @@ IUSE=""
 RESTRICT="strip fetch"
 
 RDEPEND="
-	media-libs/audiofile
-	media-libs/libmikmod
-	media-libs/libogg
 	media-libs/libsdl
-	media-libs/libvorbis
-	media-libs/sdl-image
-	media-libs/sdl-mixer
-	media-libs/smpeg
-	media-sound/esound"
+	media-libs/sdl-image[png]
+	media-libs/sdl-mixer[vorbis,wav]"
 DEPEND=""
 
 S=${WORKDIR}/${MY_PN}
