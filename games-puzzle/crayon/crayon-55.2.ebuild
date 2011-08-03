@@ -14,7 +14,7 @@ SRC_URI="${PN}_release${MY_PV}.tar.gz"
 
 LICENSE=""
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64"
 IUSE=""
 
 RESTRICT="strip fetch"
@@ -22,17 +22,13 @@ RESTRICT="strip fetch"
 RDEPEND="
 	amd64? (
 		app-emulation/emul-linux-x86-baselibs
+		app-emulation/emul-linux-x86-compat
 		app-emulation/emul-linux-x86-opengl
 		app-emulation/emul-linux-x86-qtlibs
 		app-emulation/emul-linux-x86-sdl
 		app-emulation/emul-linux-x86-xlibs
 		)
-	x86? (
-		virtual/opengl
-		net-misc/curl
-		x11-libs/qt-gui
-		x11-libs/qt-core
-		)"
+	>=sys-devel/gcc-4.5"
 DEPEND=""
 
 S=${WORKDIR}/${MY_PN}
