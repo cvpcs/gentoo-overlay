@@ -12,6 +12,7 @@ DESCRIPTION="An arcade puzzle game about space and Vs"
 HOMEPAGE="http://thelettervsixtim.es/"
 SRC_URI="${MY_P}_Linux.tar.gz"
 
+LICENSE=""
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
@@ -28,6 +29,7 @@ RDEPEND="
 	media-libs/sdl-mixer
 	media-libs/smpeg
 	media-sound/esound"
+DEPEND=""
 
 S=${WORKDIR}/${MY_PN}
 
