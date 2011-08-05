@@ -9,7 +9,7 @@ DESCRIPTION="Yubico C client library"
 SRC_URI="http://yubico-c-client.googlecode.com/files/${P}.tar.gz"
 HOMEPAGE="http://code.google.com/p/yubico-c-client/"
 
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 SLOT="0"
 LICENSE="BSD-2"
 IUSE=""

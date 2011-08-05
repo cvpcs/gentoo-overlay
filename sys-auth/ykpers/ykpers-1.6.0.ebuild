@@ -9,7 +9,7 @@ DESCRIPTION="Library and tool for personalization of Yubico's YubiKey"
 SRC_URI="http://yubikey-personalization.googlecode.com/files/${P}.tar.gz"
 HOMEPAGE="http://code.google.com/p/yubikey-personalizaiton/"
 
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 SLOT="0"
 LICENSE="BSD-2"
 IUSE=""
