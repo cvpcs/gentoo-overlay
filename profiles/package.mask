@@ -14,3 +14,4 @@ x11-apps/xmacro
 =media-video/asusg50oled-9999
 =games-emulation/pcsx-df-9999
 =games-emulation/pcsxr-20090130
+=media-gfx/wallscript-9999
