@@ -3,6 +3,7 @@
 FBCONDECOR_CONFIG="/etc/conf.d/fbcondecor"
 
 depend() {
+	need localmount
 	before fbcondecor
 }
 
