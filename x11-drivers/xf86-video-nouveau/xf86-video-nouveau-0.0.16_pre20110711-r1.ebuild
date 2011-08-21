@@ -21,6 +21,7 @@ DEPEND="${RDEPEND}
 	x11-proto/dri2proto"
 
 src_prepare() {
+	xorg-2_src_prepare
 	use fixflip && epatch "${FILESDIR}"/${P}-can_exchange.patch
 }
 
