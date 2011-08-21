@@ -1,0 +1,12 @@
+--- a/src/nouveau_dri2.c	2011-07-10 21:48:34.000000000 -0500
++++ b/src/nouveau_dri2.c	2011-08-21 18:10:24.023737655 -0500
+@@ -153,8 +153,7 @@
+ 
+ 	}
+ 
+-	return (!nouveau_exa_pixmap_is_onscreen(dst_pix) ||
+-		(DRI2CanFlip(draw) && pNv->has_pageflip)) &&
++	return  (DRI2CanFlip(draw) && pNv->has_pageflip) &&
+ 		dst_pix->drawable.width == src_pix->drawable.width &&
+ 		dst_pix->drawable.height == src_pix->drawable.height &&
+ 		dst_pix->drawable.depth == src_pix->drawable.depth &&
