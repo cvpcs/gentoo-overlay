@@ -49,9 +49,6 @@ src_prepare() {
 	# Open tty in non-blocking mode
 	epatch "${FILESDIR}"/"${P}"-nonblock.patch
 
-	# crosscompile patch
-	epatch "${FILESDIR}"/"${P}"-crosscompile.patch
-
 	# sched.h is a system header and causes problems with some C libraries
 	mv sched.h _sched.h || die
 	sed -i '/include/s:sched.h:_sched.h:' screen.h || die
@@ -65,9 +62,6 @@ src_prepare() {
 		-e "s:/local/screens/S-:${EPREFIX}/var/run/screen/S-:g" \
 		doc/screen.1 \
 		|| die "sed doc/screen.1 failed"
-
-	# proper setenv detection for Solaris
-	epatch "${FILESDIR}"/"${P}"-setenv_autoconf.patch
 
 	# Allow TERM string large enough to use with rxvt-unicode-256color
 	# Allow usernames up to 32 chars
