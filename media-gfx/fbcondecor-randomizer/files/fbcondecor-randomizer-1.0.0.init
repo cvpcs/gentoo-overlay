@@ -1,0 +1,103 @@
+#!/sbin/runscript
+
+FBCONDECOR_CONFIG="/etc/conf.d/fbcondecor"
+
+depend() {
+	need localmount
+	before fbcondecor
+}
+
+start() {
+	ebegin "Randomizing FBConDecor TTY mappings"
+
+	# check to make sure the fbcondecor config exists
+	if [ ! -e "${FBCONDECOR_CONFIG}" ] ; then
+		eerror "Could not find ${FBCONDECOR_CONFIG}."
+		eerror "Unable to randomize fbcondecor due to lack of configuration file."
+		return 1
+	fi
+
+	# pull out the fbcondecor configurations
+	local fbcondecor_ttys fbcondecor_map
+	fbcondecor_ttys="$(source "${FBCONDECOR_CONFIG}" && echo ${FBCONDECOR_TTYS})"
+	fbcondecor_map="$(source "${FBCONDECOR_CONFIG}" && echo ${FBCONDECOR_TTY_MAP})"
+
+	# determine the valid ttys to randomize (ones not locked)
+	local valid_ttys
+	if [ -z "${FBCONDECOR_LOCKED_TTYS}" ] ; then
+		valid_ttys="${fbcondecor_ttys}"
+	else
+		for fb_tty in $fbcondecor_ttys ; do
+			local use_tty
+
+			use_tty=1
+
+			for lock_tty in ${FBCONDECOR_LOCKED_TTYS} ; do
+				if [ "${fb_tty}" == "${lock_tty}" ] ; then
+					use_tty=0
+					break;
+				fi
+			done
+
+			if [ ${use_tty} -eq 1 ] ; then
+				valid_ttys="${valid_ttys} ${fb_tty}"
+			fi
+		done
+	fi
+
+	# determine the valid themes to randomize
+	local valid_themes
+	if [ -z "${FBCONDECOR_VALID_THEMES}" ] ; then
+		valid_themes="$(find /etc/splash/* -type d -exec basename {} \;)"
+	else
+		for theme in ${FBCONDECOR_VALID_THEMES} ; do
+			if [ -d "/etc/splash/${theme}" ] ; then
+				valid_themes="${valid_themes} ${theme}"
+			fi
+		done
+	fi
+
+	# randomize our themes and count them
+	local randomized_themes randomized_themes_count
+	randomized_themes=$(echo "$(for theme in ${valid_themes} ; do echo "${RANDOM} ${theme}" ; done)" | sort | sed -r 's/^[0-9]+ //')
+	randomized_themes_count=$(echo "$(for theme in ${randomized_themes} ; do echo "${theme}" ; done)" | wc -l)
+
+	# variables for randomization
+	local new_map counter cur_theme
+
+	# keep track of the existing maps that are locked so we preserve them
+	new_map="${fbcondecor_map}"
+	for tty in ${valid_ttys} ; do
+		new_map=$(echo "$(for map in ${new_map} ; do echo "${map}" ; done)" | grep -v -e "^${tty}:")
+	done
+
+	# generate our random mapping
+	counter=0
+	for tty in ${valid_ttys} ; do
+		cur_theme="$(echo "$(for theme in ${randomized_themes} ; do echo "${theme}" ; done)" | head -n $(expr ${counter} + 1) | tail -n 1)"
+
+		new_map="${new_map} ${tty}:${cur_theme}"
+
+		counter=$(expr \( $counter + 1 \) % $randomized_themes_count)
+	done
+
+	# format the new map... just cuz
+	new_map=$(echo "$(for map in ${new_map} ; do echo "${map}" ; done)" | sed -r 's/^([0-9]):/0\1:/' | sort | sed -r 's/^0([0-9]):/\1:/')
+
+	if [ ! -e "${FBCONDECOR_CONFIG}.bak" ] ; then
+		cp "${FBCONDECOR_CONFIG}" "${FBCONDECOR_CONFIG}.bak"
+	fi
+
+	cat > "${FBCONDECOR_CONFIG}" <<EOF
+# On which TTYs should fbcondecor be enabled? Defaults to RC_TTY_NUMBER.
+FBCONDECOR_TTYS="${fbcondecor_ttys}"
+
+# Allows to set different themes on different consoles
+# format: "<console>:<theme> <console>:<theme> (...)"
+FBCONDECOR_TTY_MAP="
+${new_map}
+"
+EOF
+
+	eend $?
+}
