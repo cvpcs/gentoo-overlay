@@ -17,7 +17,7 @@ SRC_URI="https://github.com/downloads/hbons/SparkleShare/${MY_P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND=">=dev-lang/mono-2.2
