@@ -18,4 +18,4 @@ if [[ ! -S "${SOCKET}" ]]; then
 	exit 1
 fi
 
-exec /usr/bin/tmux -S "${SOCKET}" send-keys "$@" C-m
+exec /usr/bin/tmux -S "${SOCKET}" send-keys "$*" C-m

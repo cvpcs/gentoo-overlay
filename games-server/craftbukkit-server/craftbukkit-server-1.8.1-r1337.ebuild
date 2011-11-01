@@ -74,6 +74,10 @@ pkg_postinst() {
 	einfo "console with \"craftbukkit-server-console foo\". The default server name"
 	einfo "is \"main\"."
 	echo
+	einfo "It is also possible to send commands to the console in a scripting fashion"
+	einfo "using \"craftbukkit-server-console-send <server> <command>\".  If <server>"
+        einfo "is not specified, it assumes you are attempting to communicate with \"main\"."
+	echo
 
 	games_pkg_postinst
 }
