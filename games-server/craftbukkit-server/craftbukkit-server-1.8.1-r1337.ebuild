@@ -75,8 +75,7 @@ pkg_postinst() {
 	einfo "is \"main\"."
 	echo
 	einfo "It is also possible to send commands to the console in a scripting fashion"
-	einfo "using \"craftbukkit-server-console-send <server> <command>\".  If <server>"
-        einfo "is not specified, it assumes you are attempting to communicate with \"main\"."
+	einfo "using \"craftbukkit-server-console-send <server> <command>\"."
 	echo
 
 	games_pkg_postinst
