@@ -35,9 +35,8 @@ src_unpack() {
 }
 
 src_prepare() {
-	cp "${FILESDIR}"/{directory,init,console}.sh . || die
+	cp "${FILESDIR}"/{directory,init,console,console-send}.sh . || die
 	sed -i "s/@GAMES_USER_DED@/${GAMES_USER_DED}/g" directory.sh init.sh || die
-	sed -i "s/@GAMES_GROUP@/${GAMES_GROUP}/g" console.sh || die
 }
 
 src_install() {
@@ -53,6 +52,7 @@ src_install() {
 
 	newinitd init.sh "${PN}" || die
 	newgamesbin console.sh "${PN}-console" || die
+	newgamesbin console-send.sh "${PN}-console-send" || die
 
 	prepgamesdirs
 }
