@@ -15,3 +15,4 @@ x11-apps/xmacro
 =games-emulation/pcsx-df-9999
 =games-emulation/pcsxr-20090130
 =media-gfx/wallscript-9999
+=games-util/overviewer-9999
