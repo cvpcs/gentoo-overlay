@@ -7,7 +7,7 @@ inherit eutils games java-pkg-2
 
 DESCRIPTION="CraftBukkit extendable dedicated server for Minecraft"
 HOMEPAGE="http://bukkit.org"
-SRC_URI="http://ci.bukkit.org/job/dev-CraftBukkit/${PR:1}/artifact/target/craftbukkit-0.0.1-SNAPSHOT.jar -> ${P}.jar"
+SRC_URI="http://ci.bukkit.org/job/dev-CraftBukkit/${PR:1}/artifact/target/craftbukkit-${PV}-SNAPSHOT.jar -> ${P}.jar"
 LICENSE="as-is"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
