@@ -5,7 +5,7 @@
 EAPI="2"
 inherit eutils games java-pkg-2
 
-MY_R="SNAPSHOT"
+MY_R="R1"
 
 DESCRIPTION="CraftBukkit extendable dedicated server for Minecraft"
 HOMEPAGE="http://bukkit.org"
