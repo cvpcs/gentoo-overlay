@@ -18,7 +18,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="dev-lang/tcl
-	dev-tcltk/tdom"
+	dev-tcltk/tdom
+	>=dev-java/commons-daemon-1.0.9"
 DEPEND="${RDEPEND}"
 
 src_unpack() {
