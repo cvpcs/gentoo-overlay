@@ -19,7 +19,7 @@ IUSE=""
 
 RDEPEND="dev-lang/tcl
 	dev-tcltk/tdom
-	>=dev-java/commons-daemon-1.0.9"
+	dev-java/commons-daemon"
 DEPEND="${RDEPEND}"
 
 src_unpack() {
