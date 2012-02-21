@@ -1,0 +1,26 @@
+diff -r 2f533c86df4f src/arch/MovieTexture/MovieTexture_FFMpeg.cpp
+--- a/src/arch/MovieTexture/MovieTexture_FFMpeg.cpp	Wed Oct 05 15:20:39 2011 -0500
++++ b/src/arch/MovieTexture/MovieTexture_FFMpeg.cpp	Mon Feb 20 22:09:35 2012 -0600
+@@ -28,6 +28,9 @@
+ #endif
+ };
+ 
++#undef FF_B_TYPE
++#define FF_B_TYPE avcodec::AV_PICTURE_TYPE_B
++
+ int URLRageFile_open( avcodec::URLContext *h, const char *filename, int flags );
+ int URLRageFile_read( avcodec::URLContext *h, unsigned char *buf, int size );
+ int URLRageFile_close( avcodec::URLContext *h );
+@@ -673,9 +676,9 @@
+ }
+ 
+ #if defined(MACOSX) || defined(_MSC_VER) // still using older ffmpeg versions
+-	int URLRageFile_write( avcodec::URLContext *h, unsigned char *buf, int size )
++	int URLRageFile_write( avcodec::URLContext *h, const unsigned char *buf, int size )
+ #else // assume ffmpeg 0.6 on *nix
+-	int URLRageFile_write( avcodec::URLContext *h, unsigned char *buf, int size )
++	int URLRageFile_write( avcodec::URLContext *h, const unsigned char *buf, int size )
+ #endif
+ {
+ 	RageFileBasic *f = (RageFileBasic *) h->priv_data;
+
