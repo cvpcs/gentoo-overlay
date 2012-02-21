@@ -62,9 +62,14 @@ src_install() {
 	doins -r Announcers BackgroundEffects BackgroundTransitions BGAnimations Characters \
 		Courses Data Docs Manual NoteSkins Scripts Songs Themes || die "doins failed"
 
+	dodir "${dir}/Cache"
+
 	newicon "Themes/default/Graphics/Common window icon.png" ${PN}.png
 	make_desktop_entry ${PN} StepMania
 
 	games_make_wrapper ${PN} "${dir}"/${PN} "${dir}"
 	prepgamesdirs
+
+	# stupid hack
+	fperms g+w -R "${dir}"
 }
