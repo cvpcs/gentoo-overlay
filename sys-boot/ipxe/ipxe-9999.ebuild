@@ -17,7 +17,8 @@ LICENSE="GPL-2"
 KEYWORDS="-* ~amd64 ~x86"
 IUSE=""
 
-DEPEND="sys-boot/syslinux"
+DEPEND="app-cdr/cdrtools
+	sys-boot/syslinux"
 
 src_unpack() {
 	git-2_src_unpack
