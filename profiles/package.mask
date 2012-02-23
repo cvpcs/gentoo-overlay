@@ -9,10 +9,11 @@ x11-apps/xmacro
 =games-arcade/ayim-1.2.0
 =games-puzzle/crayon-55.2
 
-# SVN
+# SVN/GIT/HG
 =games-arcade/smc-9999
 =media-video/asusg50oled-9999
 =games-emulation/pcsx-df-9999
 =games-emulation/pcsxr-20090130
 =media-gfx/wallscript-9999
 =games-util/overviewer-9999
+=sys-boot/ipxe-9999
