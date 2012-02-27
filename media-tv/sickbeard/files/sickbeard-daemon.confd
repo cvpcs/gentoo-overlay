@@ -1,0 +1,6 @@
+# user to run as
+#RUN_AS=sickbeard
+
+# data directory
+#DATA_DIR=/var/lib/sickbeard
+

@@ -17,3 +17,4 @@ x11-apps/xmacro
 =media-gfx/wallscript-9999
 =games-util/overviewer-9999
 =sys-boot/ipxe-9999
+=media-tv/sickbeard-9999

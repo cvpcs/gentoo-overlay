@@ -1,0 +1,46 @@
+#!/sbin/runscript
+
+RUN_AS=${RUN_AS:-sickbeard}
+DATA_DIR=${DATA_DIR:-/var/lib/sickbeard}
+
+APP_PATH=${APP_PATH:-/usr/share/sickbeard}
+DAEMON=${DAEMON:-/usr/bin/python2}
+PID_FILE=${PID_FILE:-/var/run/sickbeard/sickbeard.pid}
+PID_PATH=$(dirname ${PID_FILE})
+DAEMON_OPTS=" SickBeard.py -q --daemon --pidfile=${PID_FILE} --datadir=${DATA_DIR}"
+
+check_config() {
+	if [ ! -d ${PID_PATH} ]; then
+		mkdir -p ${PID_PATH}
+		chown $RUN_AS ${PID_PATH}
+	fi
+
+	if [ ! -d ${DATA_DIR} ]; then
+		mkdir -p ${DATA_DIR}
+		chown $RUN_AS ${DATA_DIR}
+	fi
+
+	if [ -e ${PID_FILE} ]; then
+		PID=`cat ${PID_FILE}`
+		if ! kill -0 ${PID} > /dev/null 2>&1; then
+			echo "Removing stale ${PID_FILE}"
+			rm ${PID_FILE}
+		fi
+	fi
+}
+
+start() {
+	check_config
+
+	ebegin "Starting Sick Beard daemon"
+	start-stop-daemon --start --quiet --pidfile ${PID_FILE} \
+		--chdir ${APP_PATH} --user ${RUN_AS} --exec ${DAEMON} \
+		-- ${DAEMON_OPTS}
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping Sick Beard daemon"
+	start-stop-daemon --stop --pidfile ${PID_FILE} --retry 15
+	eend $?
+}
