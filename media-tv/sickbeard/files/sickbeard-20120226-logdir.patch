@@ -1,10 +1,13 @@
 diff --git a/SickBeard.py b/SickBeard.py
-index 1b805f4..6193711 100755
+index 1b805f4..4cf119b 100755
 --- a/SickBeard.py
 +++ b/SickBeard.py
-@@ -141,7 +141,7 @@ def main():
+@@ -139,9 +139,9 @@ def main():
+     threading.currentThread().name = "MAIN"
+ 
      try:
-         opts, args = getopt.getopt(sys.argv[1:], "qfdp::", ['quiet', 'forceupdate', 'daemon', 'port=', 'pidfile=', 'nolaunch', 'config=', 'datadir=']) #@UnusedVariable
+-        opts, args = getopt.getopt(sys.argv[1:], "qfdp::", ['quiet', 'forceupdate', 'daemon', 'port=', 'pidfile=', 'nolaunch', 'config=', 'datadir=']) #@UnusedVariable
++        opts, args = getopt.getopt(sys.argv[1:], "qfdp::", ['quiet', 'forceupdate', 'daemon', 'port=', 'pidfile=', 'nolaunch', 'config=', 'datadir=', 'logdir=']) #@UnusedVariable
      except getopt.GetoptError:
 -        print "Available options: --quiet, --forceupdate, --port, --daemon, --pidfile, --config, --datadir"
 +        print "Available options: --quiet, --forceupdate, --port, --daemon, --pidfile, --config, --datadir, --logdir"
