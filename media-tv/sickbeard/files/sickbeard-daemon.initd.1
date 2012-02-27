@@ -7,7 +7,8 @@ APP_PATH=${APP_PATH:-/usr/share/sickbeard}
 DAEMON=${DAEMON:-/usr/bin/python2}
 PID_FILE=${PID_FILE:-/var/run/sickbeard/sickbeard.pid}
 PID_PATH=$(dirname ${PID_FILE})
-DAEMON_OPTS=" SickBeard.py -q --daemon --pidfile=${PID_FILE} --datadir=${DATA_DIR}"
+LOG_DIR=${LOG_DIR:-/var/log/sickbeard}
+DAEMON_OPTS=" SickBeard.py -q --daemon --pidfile=${PID_FILE} --datadir=${DATA_DIR} --logdir=${LOG_DIR}"
 
 check_config() {
 	if [ ! -d ${PID_PATH} ]; then

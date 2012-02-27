@@ -1,0 +1,39 @@
+diff --git a/SickBeard.py b/SickBeard.py
+index 1b805f4..6193711 100755
+--- a/SickBeard.py
++++ b/SickBeard.py
+@@ -141,7 +141,7 @@ def main():
+     try:
+         opts, args = getopt.getopt(sys.argv[1:], "qfdp::", ['quiet', 'forceupdate', 'daemon', 'port=', 'pidfile=', 'nolaunch', 'config=', 'datadir=']) #@UnusedVariable
+     except getopt.GetoptError:
+-        print "Available options: --quiet, --forceupdate, --port, --daemon, --pidfile, --config, --datadir"
++        print "Available options: --quiet, --forceupdate, --port, --daemon, --pidfile, --config, --datadir, --logdir"
+         sys.exit()
+ 
+     forceUpdate = False
+@@ -181,6 +181,10 @@ def main():
+         if o in ('--datadir',):
+             sickbeard.DATA_DIR = os.path.abspath(a)
+ 
++        # logdir
++        if o in ('--logdir',):
++            sickbeard.LOG_DIR = os.path.abspath(a)
++
+         # write a pidfile if requested
+         if o in ('--pidfile',):
+             sickbeard.PIDFILE = str(a)
+diff --git a/sickbeard/__init__.py b/sickbeard/__init__.py
+index ce061ac..edd8331 100755
+--- a/sickbeard/__init__.py
++++ b/sickbeard/__init__.py
+@@ -429,7 +429,9 @@ def initialize(consoleLogging=True):
+         CheckSection('pyTivo')
+         CheckSection('NMA')
+ 
+-        LOG_DIR = check_setting_str(CFG, 'General', 'log_dir', 'Logs')
++        if not LOG_DIR:
++            LOG_DIR = check_setting_str(CFG, 'General', 'log_dir', 'Logs')
++
+         if not helpers.makeDir(LOG_DIR):
+             logger.log(u"!!! No log folder, logging to screen only!", logger.ERROR)
+ 

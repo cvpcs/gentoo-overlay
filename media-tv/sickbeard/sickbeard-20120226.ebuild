@@ -13,6 +13,7 @@ SRC_URI=""
 MY_PN="Sick-Beard"
 
 EGIT_REPO_URI="git://github.com/midgetspy/${MY_PN}.git"
+EGIT_COMMIT="957e75a997d07f379e2c3a8757186f78a5b6ede1"
 
 SLOT="0"
 LICENSE="GPL-3"
@@ -34,6 +35,10 @@ src_unpack() {
 	git-2_src_unpack
 }
 
+src_prepare() {
+	epatch "${FILESDIR}"/$P-logdir.patch
+}
+
 src_install() {
 	local dir=/usr/share/${PN}
 
@@ -51,8 +56,8 @@ src_install() {
 
 	dodoc COPYING.txt readme.md
 
-	newinitd "${FILESDIR}"/${PN}-daemon.initd ${PN}-daemon
-	newconfd "${FILESDIR}"/${PN}-daemon.confd ${PN}-daemon
+	newinitd "${FILESDIR}"/${PN}-daemon.initd.1 ${PN}-daemon
+	newconfd "${FILESDIR}"/${PN}-daemon.confd.1 ${PN}-daemon
 
         keepdir /var/{lib,log,run}/sickbeard
         fowners -R sickbeard:sickbeard /var/{lib,log,run}/sickbeard
