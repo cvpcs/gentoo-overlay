@@ -1,10 +1,4 @@
-# broken
-=virtual/humblebundle-3-r1
-=games-arcade/ayim-1.2.0
-=games-puzzle/crayon-55.2
-
 # SVN/GIT/HG
-=games-arcade/smc-9999
 =media-video/asusg50oled-9999
 =games-emulation/pcsx-df-9999
 =games-emulation/pcsxr-20090130
