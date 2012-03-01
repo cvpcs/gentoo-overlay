@@ -14,7 +14,7 @@ ECVS_MODULE="${PN}"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="-*"
+KEYWORDS="~*"
 IUSE="alsa nls bin_image opengl"
 
 DEPEND=">=x11-libs/gtk+-2

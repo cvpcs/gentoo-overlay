@@ -1,9 +1,3 @@
-# still has problems with cross-path compatibility
-games-emulation/dolphin-emu
-
-# broken
-x11-apps/xmacro
-
 # broken
 =virtual/humblebundle-3-r1
 =games-arcade/ayim-1.2.0
@@ -17,3 +11,4 @@ x11-apps/xmacro
 =media-gfx/wallscript-9999
 =games-util/overviewer-9999
 =sys-boot/ipxe-9999
+=games-server/craftbukkit-server-9999

@@ -12,7 +12,7 @@ ESVN_BOOTSTRAP="autogen.sh"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~x86"
+KEYWORDS="~*"
 IUSE=""
 
 RDEPEND=">=dev-games/cegui-0.5

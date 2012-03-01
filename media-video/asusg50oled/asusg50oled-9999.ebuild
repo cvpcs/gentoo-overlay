@@ -13,7 +13,7 @@ ESVN_PROJECT="asusg50oled"
 
 LICENSE="LGPL-2"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~*"
 IUSE="acpi"
 
 DEPEND=">=virtual/jdk-1.6
