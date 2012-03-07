@@ -4,7 +4,7 @@
 
 EAPI="3"
 
-inherit eutils games git-2 java-pkg-2
+inherit eutils games git-2 java-pkg-2 versionator
 
 DESCRIPTION="CraftBukkit extendable dedicated server for Minecraft"
 HOMEPAGE="http://bukkit.org"
@@ -18,7 +18,8 @@ IUSE=""
 RESTRICT="mirror"
 
 DEPEND="virtual/jdk:1.6
-	>=dev-java/maven-bin-3"
+	>=dev-java/maven-bin-3
+	=dev-java/bukkit-9999"
 
 RDEPEND="virtual/jre:1.6
 	app-misc/tmux
@@ -33,20 +34,50 @@ pkg_setup() {
 }
 
 src_prepare() {
+	local group
+	local artifact
+	local version
+
+	group="$(grep groupId pom.xml | head -n 1 | sed -r 's/^.*<groupId>(.*)<\/groupId>.*$/\1/')"
+	artifact="$(grep artifactId pom.xml | head -n 1 | sed -r 's/^.*<artifactId>(.*)<\/artifactId>.*$/\1/')"
+	version="$(grep version pom.xml | head -n 1 | sed -r 's/^.*<version>(.*)<\/version>.*$/\1/')"
+
+	echo "groupId=${group}" >> maven.cfg
+	echo "artifactId="${artifact}" >> maven.cfg
+	echo "version="${version}" >> maven.cfg	
+
 	cp "${FILESDIR}"/{directory,init,console,console-send}.sh . || die
 	sed -i "s/@GAMES_USER_DED@/${GAMES_USER_DED}/g" directory.sh init.sh || die
 }
 
 src_compile() {
-	mvn-3.0 -Duser.home="${S}" clean package
+	# install our bukkit jar
+	mvn-3.0 install:install-file \
+		-Duser.home="${S}" \
+		-Dfile=/usr/share/bukkit/lib/bukkit.jar \
+		-DgroupId=$(grep groupId /usr/share/bukkit/maven.cfg | cut -d= -f2) \
+		-DartifactId=$(grep artifactId /usr/share/bukkit/maven.cfg | cut -d= -f2) \
+		-Dversion=$(grep version /usr/share/bukkit/maven.cfg | cut -d= -f2) \
+		-Dpackaging=jar \
+		-DgeneratePom=true
+
+	mvn-3.0 clean package \
+		-Duser.home="${S}"
 }
 
 src_install() {
+	local dir
 	local artifact
 	local version
 
-	artifact="$(grep artifactId pom.xml | head -n 1 | sed -r 's/.*<artifactId>(.*)<\/artifactId>.*/\1/')"
-	version="$(grep version pom.xml | head -n 1 | sed -r 's/.*<version>(.*)<\/version>.*/\1/')"
+	dir=/usr/share/${PN}
+	dodir ${dir}
+
+	insinto ${dir}
+	doins maven.cfg
+
+	artifact=$(grep artifactId maven.cfg | cut -d= -f2)
+	version=$(grep version maven.cfg | cut -d= -f2)
 
 	java-pkg_newjar "target/${artifact}-${version}.jar" "${PN}.jar"
 
