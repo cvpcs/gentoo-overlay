@@ -1,0 +1,233 @@
+# -*-eselect-*-  vim: ft=eselect
+# Copyright 2010-2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+inherit config
+
+DESCRIPTION="Manage CraftBukkit plugin installations"
+MAINTAINER="root@cvpcs.org"
+
+PLUGINS_DIR="/usr/share/craftbukkit-server-plugins"
+SERVERS_DIR="/var/lib/craftbukkit"
+
+get_server_plugin_dir() {
+	echo "${EROOT}${SERVERS_DIR}/${1}/plugins"
+}
+
+get_plugin_jar() {
+	echo "${EROOT}${PLUGINS_DIR}/${1}/${2}.jar"
+}
+
+get_server_plugin_version() {
+	local plugin
+	plugin="$(get_server_plugin_dir "${1}")/${2}.jar"
+	if [ -L "${plugin}" ] ; then
+		echo $(basename "$(readlink -e "${plugin}")" .jar)
+	fi
+}
+
+find_servers() {
+	local dir dirs t
+	for dir in "${EROOT}${SERVERS_DIR}"/* ; do
+		if [ -d "${dir}" ] ; then
+			t=$(basename "${dir}")
+			has ${t} ${dirs} || dirs="${dirs} ${t}"
+		fi
+	done
+	echo ${dirs}
+}
+
+find_plugins() {
+	local dir dirs t
+	for dir in "${EROOT}${PLUGINS_DIR}"/* ; do
+		if [ -d "${dir}" ] ; then
+			t=$(basename "${dir}")
+			has ${t} ${dirs} || dirs="${dirs} ${t}"
+		fi
+	done
+	echo ${dirs}
+}
+
+find_plugin_versions() {
+	local jar vers t
+	if [ ! -z "${1}" -a -d "${EROOT}${PLUGINS_DIR}/${1}" ] ; then
+		for jar in "${EROOT}${PLUGINS_DIR}/${1}"/*.jar ; do
+			if [ -f "${jar}" ] ; then
+				t=$(basename "${jar}" .jar)
+				has ${t} ${vers} || vers="${vers} ${t}"
+			fi
+		done
+	fi
+
+	echo ${vers}
+}
+
+check_server() {
+	local servers
+	servers=$(find_servers)
+	has ${1} ${servers} || die -q "Please select a valid server: ${servers}"
+}
+
+check_plugin() {
+	local plugins
+	plugins=$(find_plugins)
+	has ${1} ${plugins} || die -q "Please select a valid plugin: ${plugins}"
+}
+
+check_plugin_version() {
+	local versions
+	versions=$(find_versions "${1}")
+	has ${2} ${versions} || die -q "Please select a valid plugin version: ${versions}"
+}
+
+list_servers() {
+	local server servers
+	servers=$(find_servers)
+	write_list_start "Available servers:"
+	if [ -z "${servers}" ] ; then
+		write_kv_list_entry "(none found)"
+	else
+		for server in ${servers} ; do
+			write_kv_list_entry "${server}"
+		done
+	fi
+}
+
+list_plugins() {
+	local plugin plugins version versions
+	plugins=$(find_plugins)
+	write_list_start "Available plugins:"
+	if [ -z "${plugins}" ] ; then
+		write_kv_list_entry "(none found)"
+	else
+		for plugin in ${plugins}; do
+			write_kv_list_entry "$(highlight ${plugin})"
+			versions=$(find_plugin_versions ${plugin})
+			for version in ${versions}; do
+				write_kv_list_entry "$(space 5)${version}"
+			done
+		done
+	fi
+}
+
+show_plugins() {
+	local plugin plugins t
+	for plugin in "$(get_server_plugin_dir "${1}")/*.jar"; do
+		if [ -L "${plugin}" ] ; then
+			t=$(basename "${plugin}" .jar)
+			has ${t} ${plugins} || plugins="${plugins} ${t}"
+		fi
+	done
+	write_list_start "Plugins installed on server $(highlight ${1}):"
+	if [ -z "${plugins}" ] ; then
+		write_kv_list_entry "(none found)"
+	else
+		for plugin in ${plugins}; do
+			t=$(get_server_plugin_version "${1}" "${plugin}")
+			write_kv_list_entry "${plugin} $(highlight ${t})"
+		done
+	fi
+}
+
+install_plugin() {
+	local plugin_jar server_dir relpath
+	server_dir="$(get_server_plugin_dir "${1}")
+	plugin_jar="$(get_plugin_jar "${2}" "${3}")
+	if [ -f "${plugin_jar}" ] ; then
+		relpath=$(relative_name "${plugin_jar}" "${server_dir}")
+		ln -sf "${relpath}" "${server_dir}/${2}.jar"
+		echo "Installed $(highlight ${2}) ($(highlight v${3})) into $(highlight ${1})"
+	fi
+}
+
+uninstall_plugin() {
+	local plugin
+	plugin="$(get_server_plugin_dir "${1}")/${2}.jar"
+	if [ -L "${plugin}" ] ; then
+		rm "${plugin}"
+		echo "Uninstalled $(highlight ${2}) from $(highlight ${1})"
+	fi
+}
+
+## Install action
+
+describe_install() {
+	echo "Installs the specified plugin into the specified server"
+	echo "(NOTE: this will uninstall earlier versions of the plugin to install)"
+}
+
+describe_install_parameters() {
+	echo "<server> <plugin> <version>"
+}
+
+describe_install_options() {
+	echo "server:	Name of the server for which to install"
+	echo "plugin:	Name of the plugin to install"
+	echo "version:	Version of the plugin to install"
+}
+
+do_install() {
+	check_server "${1}"
+	check_plugin "${2}"
+	check_plugin_version "${2}" "${3}"
+	uninstall_plugin "${1}" "${2}"
+	install_plugin "${1}" "${2}" "${3}"
+}
+
+## Uninstall action
+
+describe_uninstall() {
+	echo "Uninstalls the specified plugin from the specified server"
+}
+
+describe_uninstall_parameters() {
+	echo "<server> <plugin>"
+}
+
+describe_uninstall_options() {
+	echo "server:	Name of the server from which to uninstall"
+	echo "plugin:	Name of the plugin to uninstall"
+}
+
+do_uninstall() {
+	check_server "${1}"
+	uninstall_plugin "${1}" "${2}"
+}
+
+## List action
+
+describe_list() {
+	echo "Lists available craftbukkit plugins/servers"
+}
+
+describe_list_parameters() {
+	echo "<what>"
+}
+
+describe_list_options() {
+	echo "what:	What to list (either 'servers' or 'plugins')"
+}
+
+do_list() {
+	has "${1}" servers plugins || die -q "Please select what to list: either 'servers' or 'plugins'"
+	list_${1}
+}
+
+## Show action
+
+describe_show() {
+	echo "Shows currently installed plugins for a given server"
+}
+
+describe_show_parameters() {
+	echo "<server>"
+}
+
+describe_show_options() {
+	echo "server:	Name of the server to show installed plugins"
+}
+
+do_show() {
+	check_server "${1}"
+	show_plugins "${1}"
+}
