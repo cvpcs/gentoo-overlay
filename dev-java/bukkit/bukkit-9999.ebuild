@@ -32,8 +32,8 @@ src_prepare() {
 	version="$(grep version pom.xml | head -n 1 | sed -r 's/^.*<version>(.*)<\/version>.*$/\1/')"
 
 	echo "groupId=${group}" >> maven.cfg
-	echo "artifactId="${artifact}" >> maven.cfg
-	echo "version="${version}" >> maven.cfg	
+	echo "artifactId=${artifact}" >> maven.cfg
+	echo "version=${version}" >> maven.cfg	
 }
 
 src_compile() {
