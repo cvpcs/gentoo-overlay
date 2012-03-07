@@ -6,3 +6,4 @@
 =games-util/overviewer-9999
 =sys-boot/ipxe-9999
 =games-server/craftbukkit-server-9999
+=dev-java/bukkit-9999
