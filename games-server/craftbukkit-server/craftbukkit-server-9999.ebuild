@@ -43,15 +43,13 @@ src_prepare() {
 	version="$(grep version pom.xml | head -n 1 | sed -r 's/^.*<version>(.*)<\/version>.*$/\1/')"
 
 	echo "groupId=${group}" >> maven.cfg
-	echo "artifactId="${artifact}" >> maven.cfg
-	echo "version="${version}" >> maven.cfg	
+	echo "artifactId=${artifact}" >> maven.cfg
+	echo "version=${version}" >> maven.cfg	
 
 	cp "${FILESDIR}"/{directory,init,console,console-send}.sh . || die
 	sed -i "s/@GAMES_USER_DED@/${GAMES_USER_DED}/g" directory.sh init.sh || die
-}
 
-src_compile() {
-	# install our bukkit jar
+	# install our bukkit jar into maven's repo
 	mvn-3.0 install:install-file \
 		-Duser.home="${S}" \
 		-Dfile=/usr/share/bukkit/lib/bukkit.jar \
@@ -60,7 +58,9 @@ src_compile() {
 		-Dversion=$(grep version /usr/share/bukkit/maven.cfg | cut -d= -f2) \
 		-Dpackaging=jar \
 		-DgeneratePom=true
+}
 
+src_compile() {
 	mvn-3.0 clean package \
 		-Duser.home="${S}"
 }
