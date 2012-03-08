@@ -12,7 +12,7 @@ HOMEPAGE="http://bukkit.org"
 EGIT_REPO_URI="git://github.com/Bukkit/Bukkit"
 EGIT_COMMIT="1317a37e18848dfcf83e9cb485b623088b2ff3aa"
 
-LICENSE="LGPL"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""

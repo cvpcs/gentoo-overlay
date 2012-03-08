@@ -12,7 +12,7 @@ HOMEPAGE="http://bukkit.org"
 EGIT_REPO_URI="git://github.com/Bukkit/CraftBukkit"
 EGIT_COMMIT="b66156b3093c6de6aa43e0005b37de01375d72af"
 
-LICENSE="LGPL"
+LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
