@@ -1,0 +1,26 @@
+diff --git a/tftp/tftp.c b/tftp/tftp.c
+index d15da22..e3bcd11 100644
+--- a/tftp/tftp.c
++++ b/tftp/tftp.c
+@@ -279,14 +279,17 @@ makerequest(int request, const char *name,
+             struct tftphdr *tp, const char *mode)
+ {
+     char *cp;
++    int len;
+ 
+     tp->th_opcode = htons((u_short) request);
+     cp = (char *)&(tp->th_stuff);
+-    strcpy(cp, name);
+-    cp += strlen(name);
++    len = strlen(name);
++    memcpy(cp, name, len);
++    cp += len;
+     *cp++ = '\0';
+-    strcpy(cp, mode);
+-    cp += strlen(mode);
++    len = strlen(mode);
++    memcpy(cp, mode, len);
++    cp += len;
+     *cp++ = '\0';
+     return (cp - (char *)tp);
+ }
