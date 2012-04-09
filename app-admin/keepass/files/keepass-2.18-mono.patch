@@ -1,0 +1,68 @@
+diff --git a/KeePass.sln b/KeePass.sln
+index 5a529e8..b955428 100644
+--- a/KeePass.sln
++++ b/KeePass.sln
+@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeePassLib", "KeePassLib\Ke
+ EndProject
+ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeePass", "KeePass\KeePass.csproj", "{10938016-DEE2-4A25-9A5A-8FD3444379CA}"
+ EndProject
+-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeePassLibSD", "KeePassLibSD\KeePassLibSD.csproj", "{DC15F71A-2117-4DEF-8C10-AA355B5E5979}"
+-EndProject
+ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrlUtil", "Translation\TrlUtil\TrlUtil.csproj", "{B7E890E7-BF50-4450-9A52-C105BD98651C}"
+ EndProject
+ Global
+@@ -44,18 +42,6 @@ Global
+ 		{10938016-DEE2-4A25-9A5A-8FD3444379CA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+ 		{10938016-DEE2-4A25-9A5A-8FD3444379CA}.Release|Win32.ActiveCfg = Release|Any CPU
+ 		{10938016-DEE2-4A25-9A5A-8FD3444379CA}.Release|x64.ActiveCfg = Release|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Debug|Win32.ActiveCfg = Debug|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Debug|x64.ActiveCfg = Debug|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Release|Win32.ActiveCfg = Release|Any CPU
+-		{DC15F71A-2117-4DEF-8C10-AA355B5E5979}.Release|x64.ActiveCfg = Release|Any CPU
+ 		{B7E890E7-BF50-4450-9A52-C105BD98651C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{B7E890E7-BF50-4450-9A52-C105BD98651C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{B7E890E7-BF50-4450-9A52-C105BD98651C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+diff --git a/KeePass/KeePass.csproj b/KeePass/KeePass.csproj
+index 1b60651..e1455c6 100644
+--- a/KeePass/KeePass.csproj
++++ b/KeePass/KeePass.csproj
+@@ -10,7 +10,7 @@
+     <RootNamespace>KeePass</RootNamespace>
+     <AssemblyName>KeePass</AssemblyName>
+     <ApplicationIcon>KeePass.ico</ApplicationIcon>
+-    <SignAssembly>true</SignAssembly>
++    <SignAssembly>false</SignAssembly>
+     <AssemblyOriginatorKeyFile>KeePass.pfx</AssemblyOriginatorKeyFile>
+     <FileUpgradeFlags>
+     </FileUpgradeFlags>
+@@ -1240,7 +1240,4 @@
+   <Target Name="AfterBuild">
+   </Target>
+   -->
+-  <PropertyGroup>
+-    <PostBuildEvent>"$(FrameworkSDKDir)bin\sgen.exe" /assembly:"$(TargetPath)" /force /nologo /compiler:/keycontainer:VS_KEY_33430356D8D7D1B8 /compiler:/delaysign-</PostBuildEvent>
+-  </PropertyGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/KeePassLib/KeePassLib.csproj b/KeePassLib/KeePassLib.csproj
+index 0a86798..5c98bc3 100644
+--- a/KeePassLib/KeePassLib.csproj
++++ b/KeePassLib/KeePassLib.csproj
+@@ -9,7 +9,7 @@
+     <AppDesignerFolder>Properties</AppDesignerFolder>
+     <RootNamespace>KeePassLib</RootNamespace>
+     <AssemblyName>KeePassLib</AssemblyName>
+-    <SignAssembly>true</SignAssembly>
++    <SignAssembly>false</SignAssembly>
+     <AssemblyOriginatorKeyFile>KeePassLib.pfx</AssemblyOriginatorKeyFile>
+     <FileUpgradeFlags>
+     </FileUpgradeFlags>
