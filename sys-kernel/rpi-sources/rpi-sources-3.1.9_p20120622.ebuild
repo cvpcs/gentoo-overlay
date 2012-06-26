@@ -4,22 +4,20 @@
 
 EAPI="2"
 ETYPE="sources"
-K_WANT_GENPATCHES="base extras"
-K_GENPATCHES_VER="14"
-K_DEBLOB_AVAILABLE="1"
-inherit kernel-2
+inherit git-2 kernel-2
 detect_version
 detect_arch
 
-KEYWORDS="alpha amd64 arm hppa ia64 ~ppc ~ppc64 s390 sh sparc x86"
-HOMEPAGE="http://dev.gentoo.org/~mpagano/genpatches"
-IUSE="deblob"
+KEYWORDS="arm"
+HOMEPAGE="https://github.com/raspberrypi/linux"
 
-DESCRIPTION="Raspberry Pi + Gentoo patchset for the ${KV_MAJOR}.${KV_MINOR} kernel tree"
-SRC_URI="${KERNEL_URI} ${GENPATCHES_URI} ${ARCH_URI}"
+DESCRIPTION="Raspberry Pi ${KV_MAJOR}.${KV_MINOR} kernel tree"
+EGIT_REPO_URI="http://github.com/raspberrypi/linux.git"
+EGIT_COMMIT="e3a21fc997669aae744537bf69e123f88a5e69e2"
+EGIT_PROJECT="${PN}"
 
-src_prepare(){
-        epatch "${FILESDIR}"/rpi-sources-3.1.9_linux.patch
+src_unpack() {
+	git-2_src_unpack
 }
 
 pkg_postinst() {
