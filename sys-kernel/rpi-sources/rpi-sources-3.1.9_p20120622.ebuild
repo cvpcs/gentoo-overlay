@@ -20,6 +20,12 @@ src_unpack() {
 	git-2_src_unpack
 }
 
+src_prepare() {
+	# remove git libraries
+	rm -r .git
+	rm $(find . -name .gitignore)
+}
+
 pkg_postinst() {
 	kernel-2_pkg_postinst
 	einfo "For more info on this patchset, and how to report problems, see:"
