@@ -35,6 +35,6 @@ src_install() {
 		mkimage/imagetool-uncompressed.py
 
 	dosym \
-		/usr/share/${PN}/mkimage/imagetool-uncompressed.py \
+		../../usr/share/${PN}/mkimage/imagetool-uncompressed.py \
 		/usr/bin/rpi-mkimage
 }
