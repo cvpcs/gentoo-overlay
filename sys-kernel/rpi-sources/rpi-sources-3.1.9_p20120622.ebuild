@@ -10,6 +10,7 @@ detect_arch
 
 KEYWORDS="arm"
 HOMEPAGE="https://github.com/raspberrypi/linux"
+IUSE="fbcondecor"
 
 DESCRIPTION="Raspberry Pi ${KV_MAJOR}.${KV_MINOR} kernel tree"
 EGIT_REPO_URI="http://github.com/raspberrypi/linux.git"
@@ -24,6 +25,10 @@ src_prepare() {
 	# remove git libraries
 	rm -r .git
 	rm $(find . -name .gitignore)
+
+	if use fbcondecor ; then
+		epatch "${FILESDIR}"/${P}-fbcondecor.patch
+	fi
 }
 
 pkg_postinst() {
