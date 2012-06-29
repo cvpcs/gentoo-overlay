@@ -17,7 +17,8 @@ IUSE="+1024x600 +1366x768 +1680x1050 +1920x1080"
 RESTRICT="binchecks strip"
 
 RDEPEND=">=media-gfx/splashutils-1.5.4[png]"
-DEPEND="${RDEPEND}"
+DEPEND="app-arch/unzip
+	${RDEPEND}"
 
 MAGICK="fb26d5a"
 S="${WORKDIR}/cvpcs-${PN}-${MAGICK}"
