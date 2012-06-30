@@ -27,7 +27,7 @@ src_prepare() {
 	rm $(find . -name .gitignore)
 
 	if use fbcondecor ; then
-		epatch "${FILESDIR}"/${PN}-$(get_version_component_range 1-$(expr $(get_version_component_count) - 1))_p20120622-fbcondecor.patch
+		epatch "${FILESDIR}"/${PN}-$(get_version_component_range 1-$(expr $(get_version_component_count) - 1))-fbcondecor.patch
 	fi
 }
 

@@ -247,6 +247,52 @@ index a862e91..86bfcff 100644
  obj-$(CONFIG_FB_STI)              += sticore.o font.o
  
  ifeq ($(CONFIG_USB_SISUSBVGA_CON),y)
+diff --git a/drivers/video/console/bitblit.c b/drivers/video/console/bitblit.c
+index 28b1a83..1ac86bd 100644
+--- a/drivers/video/console/bitblit.c
++++ b/drivers/video/console/bitblit.c
+@@ -18,6 +18,7 @@
+ #include <linux/console.h>
+ #include <asm/types.h>
+ #include "fbcon.h"
++#include "fbcondecor.h"
+ 
+ /*
+  * Accelerated handlers.
+@@ -55,6 +56,13 @@ static void bit_bmove(struct vc_data *vc, struct fb_info *info, int sy,
+ 	area.height = height * vc->vc_font.height;
+ 	area.width = width * vc->vc_font.width;
+ 
++	if (fbcon_decor_active(info, vc)) {
++		area.sx += vc->vc_decor.tx;
++		area.sy += vc->vc_decor.ty;
++		area.dx += vc->vc_decor.tx;
++		area.dy += vc->vc_decor.ty;
++	}
++
+ 	info->fbops->fb_copyarea(info, &area);
+ }
+ 
+@@ -380,11 +388,15 @@ static void bit_cursor(struct vc_data *vc, struct fb_info *info, int mode,
+ 	cursor.image.depth = 1;
+ 	cursor.rop = ROP_XOR;
+ 
+-	if (info->fbops->fb_cursor)
+-		err = info->fbops->fb_cursor(info, &cursor);
++	if (fbcon_decor_active(info, vc)) {
++		fbcon_decor_cursor(info, &cursor);
++	} else {
++		if (info->fbops->fb_cursor)
++			err = info->fbops->fb_cursor(info, &cursor);
+ 
+-	if (err)
+-		soft_cursor(info, &cursor);
++		if (err)
++			soft_cursor(info, &cursor);
++	}
+ 
+ 	ops->cursor_reset = 0;
+ }
 diff --git a/drivers/video/console/cfbcondecor.c b/drivers/video/console/cfbcondecor.c
 new file mode 100644
 index 0000000..18a5452
@@ -1714,6 +1760,35 @@ index 0000000..1d852dd
 +#endif /* CONFIG_FB_CON_DECOR */
 +
 +#endif /* __FBCON_DECOR_H */
+diff --git a/drivers/video/fbcmap.c b/drivers/video/fbcmap.c
+index 5c3960d..0b06fae 100644
+--- a/drivers/video/fbcmap.c
++++ b/drivers/video/fbcmap.c
+@@ -17,6 +17,8 @@
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ 
++#include "console/fbcondecor.h"
++
+ static u16 red2[] __read_mostly = {
+     0x0000, 0xaaaa
+ };
+@@ -254,9 +256,14 @@ int fb_set_cmap(struct fb_cmap *cmap, struct fb_info *info)
+ 				break;
+ 		}
+ 	}
+-	if (rc == 0)
++	if (rc == 0) {
+ 		fb_copy_cmap(cmap, &info->cmap);
+ 
++		if (fbcon_decor_active(info, vc_cons[fg_console].d) &&
++		    info->fix.visual == FB_VISUAL_DIRECTCOLOR)
++			fbcon_decor_fix_pseudo_pal(info, vc_cons[fg_console].d);
++	}
++
+ 	return rc;
+ }
+ 
 diff --git a/include/linux/console_decor.h b/include/linux/console_decor.h
 new file mode 100644
 index 0000000..04b8d80
