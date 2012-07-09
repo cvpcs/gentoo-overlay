@@ -6,7 +6,6 @@ import os
 import re
 import sgmllib
 import string
-import subprocess
 import sys
 import urllib2
 
@@ -116,6 +115,8 @@ class CraftBukkitRelease:
 			self.BukkitIsBroken = f
 			self.BukkitIsStable = s
 		except:
+			print('Unexpected error: %s - %s [%s]' % sys.exc_info())
+
 			self.BukkitIsBroken = True
 
 		match = self.version_pattern.match(self.Version)
@@ -179,24 +180,11 @@ class CraftBukkitRelease:
 			doc.freeDoc()
 			ctxt.xpathFreeContext()
 		except:
+			print('Unexpected error: %s - %s [%s]' % sys.exc_info())
+
 			F = True
 
 		return (V, B, C, F, S, H)
-
-def which(program):
-	def is_exe(fpath):
-		return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
-
-	fpath, fname = os.path.split(program)
-	if fpath:
-		if is_exe(program):
-			return program
-	else:
-		for path in os.environ["PATH"].split(os.pathsep):
-			exe_file = os.path.join(path, program)
-			if is_exe(exe_file):
-				return exe_file
-	return None
 
 def get_bukkits(channel):
 	api = 'http://dl.bukkit.org/api/1.0/downloads/projects/craftbukkit/artifacts/%s/?_accept=application/xml' % (channel)
@@ -249,17 +237,13 @@ def main():
 	DEF_craftbukkit_ebuild_tpl = None
 	DEF_bukkit_ebuild_tpl = None
 
-	if not which('ebuild'):
-		print('!!! Unable to locate the ebuild command !!!')
-		sys.exit(' ')
-
 	try:
 		with open(os.path.join(DEF_script_dir, DEF_craftbukkit_package + '.etpl')) as f:
 			DEF_craftbukkit_ebuild_tpl = string.Template(f.read())
 		with open(os.path.join(DEF_script_dir, DEF_bukkit_package + '.etpl')) as f:
 			DEF_bukkit_ebuild_tpl = string.Template(f.read())
 	except:
-		pass
+		print('Unexpected error: %s - %s [%s]' % sys.exc_info())
 
 	if not DEF_craftbukkit_ebuild_tpl or not DEF_bukkit_ebuild_tpl:
 		print('!!! Unable to locate ebuild templates !!!')
@@ -327,9 +311,6 @@ def main():
 							KEYWORDS=craftbukkit_keywords,
 							BUKKIT_VERSION=bukkit.BukkitFileVersion)
 					f.write(out)
-
-				print('  Digesting CraftBukkit ebuild')
-				subprocess.check_output(['ebuild', craftbukkit_file, 'digest'])
 			else:
 				print('  CraftBukkit ebuild exists, skipping...')
 
@@ -344,11 +325,24 @@ def main():
 					out = DEF_bukkit_ebuild_tpl.substitute(COMMIT=bukkit.BukkitCommit,
 							KEYWORDS=bukkit_keywords)
 					f.write(out)
-
-				print('  Digesting Bukkit ebuild')
-				subprocess.check_output(['ebuild', bukkit_file, 'digest'])
 			else:
 				print('  Bukkit ebuild exists, skipping...')
+		else:
+			print('Found invalid CRAFTBUKKIT / BUKKIT. Dumping data:')
+			print('  CRAFTBUKKIT:')
+			print('    Version     = %s' % bukkit.Version)
+			print('    BuildNumber = %s' % bukkit.BuildNumber)
+			print('    Commit      = %s' % bukkit.Commit)
+			print('    IsBroken    = %s' % bukkit.IsBroken)
+			print('    IsStable    = %s' % bukkit.IsStable)
+			print('    FileVersion = %s' % bukkit.FileVersion)
+			print('  BUKKIT:')
+			print('    Version     = %s' % bukkit.BukkitVersion)
+			print('    BuildNumber = %s' % bukkit.BukkitBuildNumber)
+			print('    Commit      = %s' % bukkit.BukkitCommit)
+			print('    IsBroken    = %s' % bukkit.BukkitIsBroken)
+			print('    IsStable    = %s' % bukkit.BukkitIsStable)
+			print('    FileVersion = %s' % bukkit.BukkitFileVersion)
 
 def usage():
 	print('Get latest Bukkit JAR')
