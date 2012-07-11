@@ -1,0 +1,58 @@
+diff --git a/heimdall/Makefile.am b/heimdall/Makefile.am
+index 782134d..fa0b642 100644
+--- a/heimdall/Makefile.am
++++ b/heimdall/Makefile.am
+@@ -22,13 +22,4 @@ if LINUXTARGET
+ udevrulesdir = /lib/udev/rules.d
+ udevrules_DATA = 60-heimdall-galaxy-s.rules
+ 
+-install-data-hook:
+-if UDEVADM
+-	sudo udevadm control --reload_rules
+-else
+-	sudo service udev restart
+-endif
+-
+-endif
+-
+ dist_noinst_SCRIPTS = autogen.sh
+diff --git a/heimdall/Makefile.in b/heimdall/Makefile.in
+index 1abf2fc..61024e7 100644
+--- a/heimdall/Makefile.in
++++ b/heimdall/Makefile.in
+@@ -682,7 +682,6 @@ distclean-generic:
+ maintainer-clean-generic:
+ 	@echo "This command is intended for maintainers to use"
+ 	@echo "it deletes files that may require special tools to rebuild."
+-@LINUXTARGET_FALSE@install-data-hook:
+ clean: clean-am
+ 
+ clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
+@@ -708,7 +707,6 @@ info-am:
+ 
+ install-data-am: install-udevrulesDATA
+ 	@$(NORMAL_INSTALL)
+-	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
+ install-dvi: install-dvi-am
+ 
+ install-dvi-am:
+@@ -767,7 +765,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-udevrulesDATA
+ 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
+ 	dvi-am html html-am info info-am install install-am \
+ 	install-binPROGRAMS install-data install-data-am \
+-	install-data-hook install-dvi install-dvi-am install-exec \
++	install-dvi install-dvi-am install-exec \
+ 	install-exec-am install-html install-html-am install-info \
+ 	install-info-am install-man install-pdf install-pdf-am \
+ 	install-ps install-ps-am install-strip install-udevrulesDATA \
+@@ -778,10 +776,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-udevrulesDATA
+ 	uninstall-udevrulesDATA
+ 
+ 
+-@LINUXTARGET_TRUE@install-data-hook:
+-@LINUXTARGET_TRUE@@UDEVADM_TRUE@	sudo udevadm control --reload_rules
+-@LINUXTARGET_TRUE@@UDEVADM_FALSE@	sudo service udev restart
+-
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:
