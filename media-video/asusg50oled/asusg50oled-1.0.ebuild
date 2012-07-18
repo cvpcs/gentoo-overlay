@@ -33,7 +33,6 @@ pkg_setup() {
 
 src_unpack() {
 	subversion_src_unpack
-	epatch "${FILESDIR}"/${P}-config.patch
 }
 
 src_prepare() {
@@ -54,12 +53,12 @@ src_install() {
 
 	dodir "${DEST}" || die
 	exeinto "${DEST}"
-	epatch "${FILESDIR}/${P}-config.patch"
 	doexe {start,stop}.sh || die
 	doexe utils/notify{,_kopete}.sh || die
 	insinto "${DEST}"
 	doins leds.jar || die
 	doins config.properties || die
+	epatch "${FILESDIR}/${P}-config.patch"
 	doins policy.all || die
 
 	dodoc CHANGELOG INSTALL README TODO || die
