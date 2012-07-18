@@ -39,6 +39,7 @@ src_prepare() {
 	sed -i "s#/opt/leds#${DEST}#g" utils/acpi/asus-g50-games.sh || die
 	sed -i "s#/opt/leds#${DEST}#g" utils/gentoo/asusg50leds || die
 	cp "${FILESDIR}/EmergeLog.java" src/leds/modules/ || die
+	epatch "${FILESDIR}/${P}-config.patch"
 }
 
 src_install() {
@@ -58,7 +59,6 @@ src_install() {
 	insinto "${DEST}"
 	doins leds.jar || die
 	doins config.properties || die
-	epatch "${FILESDIR}/${P}-config.patch"
 	doins policy.all || die
 
 	dodoc CHANGELOG INSTALL README TODO || die

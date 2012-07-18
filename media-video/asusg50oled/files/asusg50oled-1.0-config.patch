@@ -1,11 +1,17 @@
---- config.properties	2012-07-17 18:59:05.099365782 -0500
-+++ config.properties.new	2012-07-17 19:12:08.959566177 -0500
-@@ -6,7 +6,7 @@
+--- config.properties.orig	2012-07-17 21:15:29.573045780 -0500
++++ config.properties	2012-07-17 21:11:31.452022700 -0500
+@@ -5,12 +5,11 @@
+ # A special separator ('|') is used to indicate alternatives, meaning that if there is no information
  # to display by the main module, display instead the alternative modules (separated by ';' in this case)
  
- modules=leds.modules.CPUFreq,\
+-modules=leds.modules.CPUFreq,\
 -        leds.modules.Amarok|leds.modules.Kaffeine|leds.modules.Load;leds.modules.CPUUsage,\
-+        leds.modules.EmergeLog|leds.modules.Amarok|leds.modules.Kaffeine|leds.modules.Load;leds.modules.CPUUsage,\
++modules=leds.modules.EmergeLog|leds.modules.CPUFreq;leds.modules.Uptime|leds.modules.DateTime;\
++	leds.modules.Amarok|leds.modules.Kaffeine|leds.modules.Load;leds.modules.CPUUsage,\
          leds.modules.NetIO,\
          leds.modules.Battery,\
          leds.modules.BatteryStatus|leds.modules.HDDTemperature;leds.modules.CPUTemperature,\
+-        leds.modules.Uptime|leds.modules.DateTime
+ 
+ # Other available modules not used by default
+ #	leds.modules.GPUTemperature		(suggestion: replace HDDTemperature with this; needs "nvclock")
