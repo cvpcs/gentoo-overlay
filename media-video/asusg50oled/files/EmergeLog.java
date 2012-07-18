@@ -1,6 +1,3 @@
-/**
- * 
- */
 package leds.modules;
 
 import leds.ExtProperties;
@@ -164,6 +161,8 @@ public class EmergeLog extends BaseModule {
 
 	/**
 	 * Draws the appropriate text to the oled screen.
+	 * 
+	 * @return A boolean value that indicates whether to display output to the OLED screen.
 	 * @TODO Make this better
 	 */
 	public boolean draw(final Canvas c) {
