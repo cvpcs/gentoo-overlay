@@ -2,9 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI="2"
+
 inherit linux-info subversion
 
-EAPI="2"
 
 DESCRIPTION="ASUS G50 OLED Daeomon"
 HOMEPAGE="http://asusg50oled.sourceforge.net/"
