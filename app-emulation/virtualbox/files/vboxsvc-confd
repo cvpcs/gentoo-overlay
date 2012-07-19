@@ -1,0 +1,11 @@
+# Username to start vbox as, must be part of vboxusers group.
+VM_USER="nobody"
+
+# Virtual Machine Name
+VM_NAME="Windows Server 2003"
+
+# Shutdown Method: pause|resume|reset|poweroff|savestate|acpipowerbutton|acpisleepbutton
+VM_SHUTDOWN="savestate"
+
+# Nice Priority: -20 (most favorable scheduling) to 19 (least favorable)
+VM_NICE=0
