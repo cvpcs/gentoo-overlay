@@ -1,0 +1,42 @@
+To set up the cvpcs gentoo overlay, first install layman:
+    ---------------------------	
+    |   emerge -av layman     |
+    ---------------------------
+
+Once layman is installed, we need to tell it where to look for the overlay. You do this by editing the /etc/layman/layman.cfg file. Find the section that looks like this:
+
+#-----------------------------------------------------------
+# URLs of the remote lists of overlays (one per line) or
+# local overlay definitions
+#
+#overlays  : http://www.gentoo.org/proj/en/overlays/repositories.xml
+#            http://dev.gentoo.org/~wrobel/layman/global-overlays.xml
+#            http://mydomain.org/my-layman-list.xml
+#            file:///var/lib/layman/my-list.xml
+
+overlays  : http://www.gentoo.org/proj/en/overlays/repositories.xml
+And add the cvpcs overlay location to it:
+
+#-----------------------------------------------------------
+# URLs of the remote lists of overlays (one per line) or
+# local overlay definitions
+#
+#overlays  : http://www.gentoo.org/proj/en/overlays/repositories.xml
+#            http://dev.gentoo.org/~wrobel/layman/global-overlays.xml
+#            http://mydomain.org/my-layman-list.xml
+#            file:///var/lib/layman/my-list.xml
+
+overlays  : http://www.gentoo.org/proj/en/overlays/repositories.xml
+            https://raw.github.com/cvpcs/gentoo-overlay/master/profiles/repo.xml
+You can now sync the layman overlay list and add the cvpcs overlay:
+
+	 -------------------------
+        |   layman -L             |
+        |   layman -a cvpcs       |
+         -------------------------
+
+Lastly, you'll need to make sure you set your /etc/make.conf to source layman's makefile in order to pull in the overlays it installs:
+
+	 ----------------------------------------------------------------        
+        |   echo "source /var/lib/layman/make.conf" >> /etc/make.conf    |
+         ----------------------------------------------------------------
