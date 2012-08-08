@@ -20,7 +20,7 @@ RESTRICT="mirror"
 
 DEPEND="virtual/jdk:1.6
 	>=dev-java/maven-bin-3
-	=dev-java/bukkit-1.2.3.1378*"
+	=dev-java/bukkit-1.2.3.1378_beta*"
 
 RDEPEND="virtual/jre:1.6
 	app-misc/tmux
@@ -50,7 +50,7 @@ src_prepare() {
 	cp "${FILESDIR}"/{directory,init,console,console-send}.sh . || die
 	sed -i "s/@GAMES_USER_DED@/${GAMES_USER_DED}/g" directory.sh init.sh || die
 
-	# install our bukkit jar into maven's repo
+	# install our bukkit jar int maven's repo
 	mvn-3.0 install:install-file \
 		-Duser.home="${S}" \
 		-Dfile=/usr/share/bukkit/lib/bukkit.jar \
