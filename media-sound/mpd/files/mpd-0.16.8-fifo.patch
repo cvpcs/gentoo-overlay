@@ -1,0 +1,52 @@
+diff --git a/src/output/fifo_output_plugin.c b/src/output/fifo_output_plugin.c
+index f4217ec..d2d3419 100644
+--- a/src/output/fifo_output_plugin.c
++++ b/src/output/fifo_output_plugin.c
+@@ -201,21 +201,35 @@ fifo_output_init(G_GNUC_UNUSED const struct audio_format *audio_format,
+ 	fd = fifo_data_new();
+ 	fd->path = path;
+ 
++	return fd;
++}
++
++static void
++fifo_output_finish(void *data)
++{
++	struct fifo_data *fd = (struct fifo_data *)data;
++
++	fifo_data_free(fd);
++}
++
++static void
++fifo_output_enable(void *data, GError **error)
++{
++	struct fifo_data *fd = (struct fifo_data *)data;
++
+ 	if (!fifo_open(fd, error)) {
+ 		fifo_data_free(fd);
+ 		return NULL;
+ 	}
+ 
+-	return fd;
+ }
+ 
+ static void
+-fifo_output_finish(void *data)
++fifo_output_disable(void *data)
+ {
+ 	struct fifo_data *fd = (struct fifo_data *)data;
+ 
+ 	fifo_close(fd);
+-	fifo_data_free(fd);
+ }
+ 
+ static bool
+@@ -296,6 +310,8 @@ const struct audio_output_plugin fifo_output_plugin = {
+ 	.name = "fifo",
+ 	.init = fifo_output_init,
+ 	.finish = fifo_output_finish,
++	.enable = fifo_output_enable,
++	.disable = fifo_output_disable,
+ 	.open = fifo_output_open,
+ 	.close = fifo_output_close,
+ 	.play = fifo_output_play,
