@@ -1,0 +1,68 @@
+diff --git a/src/modules/module-pipe-source.c b/src/modules/module-pipe-source.c
+index a941f08..e2cdedf 100644
+--- a/src/modules/module-pipe-source.c
++++ b/src/modules/module-pipe-source.c
+@@ -30,6 +30,7 @@
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <sys/ioctl.h>
++#include <grp.h>
+ 
+ #ifdef HAVE_SYS_FILIO_H
+ #include <sys/filio.h>
+@@ -58,6 +59,7 @@ PA_MODULE_USAGE(
+         "source_name=<name for the source> "
+         "source_properties=<properties for the source> "
+         "file=<path of the FIFO> "
++        "group=<group ID to be given write access to the FIFO> "
+         "format=<sample format> "
+         "rate=<sample rate> "
+         "channels=<number of channels> "
+@@ -87,6 +89,7 @@ static const char* const valid_modargs[] = {
+     "source_name",
+     "source_properties",
+     "file",
++    "group",
+     "format",
+     "rate",
+     "channels",
+@@ -216,6 +219,9 @@ int pa__init(pa_module*m) {
+     pa_modargs *ma;
+     struct pollfd *pollfd;
+     pa_source_new_data data;
++    const char *group;
++    struct group *gr;
++    int gr_id;
+ 
+     pa_assert(m);
+ 
+@@ -258,6 +264,29 @@ int pa__init(pa_module*m) {
+         goto fail;
+     }
+ 
++    if ((group = pa_modargs_get_value(ma, "group", NULL)) != NULL) {
++        if (sscanf(group, "%d", &gr_id) == (int)strlen(group)) {
++            gr = getgrgid(gr_id);
++        } else {
++            gr = getgrnam(group);
++        }
++
++        if (!gr) {
++            pa_log("'%s' is not a valid group.", group);
++            goto fail;
++        }
++
++        if (fchmod(u->fd, st.st_mode | S_IWGRP) < 0) {
++            pa_log("fchmod('%s') failed: %s", u->filename, pa_cstrerror(errno));
++            goto fail;
++        }
++
++        if (fchown(u->fd, st.st_uid, gr->gr_gid) < 0) {
++            pa_log("fchown('%s') failed: %s",u->filename, pa_cstrerror(errno));
++            goto fail;
++        }
++    }
++
+     pa_source_new_data_init(&data);
+     data.driver = __FILE__;
+     data.module = m;
