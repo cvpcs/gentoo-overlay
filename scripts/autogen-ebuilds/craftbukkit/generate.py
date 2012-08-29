@@ -1,6 +1,7 @@
 #!/usr/bin/python2
 
 import getopt
+import glob
 import libxml2
 import os
 import re
@@ -186,26 +187,27 @@ class CraftBukkitRelease:
 
 		return (V, B, C, F, S, H)
 
-def get_bukkits(channel):
-	api = 'http://dl.bukkit.org/api/1.0/downloads/projects/craftbukkit/artifacts/%s/?_accept=application/xml' % (channel)
-
-	resp = urllib2.urlopen(api)
-	xml = resp.read()
-
-	doc = libxml2.parseDoc(xml.encode('UTF-8'))
-	ctxt = doc.xpathNewContext()
-
-	items = ctxt.xpathEval('/root/results/list-item')
-
+def get_bukkits(channels):
 	craftbukkits = []
 
-	for item in items:
-		ctxt.setContextNode(item)
-		build = ctxt.xpathEval('build_number')[0].getContent()
-		craftbukkits.append(CraftBukkitRelease(build))
+	for channel in channels:
+		api = 'http://dl.bukkit.org/api/1.0/downloads/projects/craftbukkit/artifacts/%s/?_accept=application/xml' % (channel)
 
-	doc.freeDoc()
-	ctxt.xpathFreeContext()
+		resp = urllib2.urlopen(api)
+		xml = resp.read()
+
+		doc = libxml2.parseDoc(xml.encode('UTF-8'))
+		ctxt = doc.xpathNewContext()
+
+		items = ctxt.xpathEval('/root/results/list-item')
+
+		for item in items:
+			ctxt.setContextNode(item)
+			build = ctxt.xpathEval('build_number')[0].getContent()
+			craftbukkits.append(CraftBukkitRelease(build))
+
+		doc.freeDoc()
+		ctxt.xpathFreeContext()
 
 	return craftbukkits
 
@@ -226,7 +228,8 @@ def add_mask(overlay_dir, mask):
 			f.write(mask + '\n')
 
 def main():
-	OPT_channel = 'rb'
+	OPT_channels = []
+	OPT_prune = False
 	OPT_overlay_dir = None
 
 	DEF_script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -250,7 +253,7 @@ def main():
 		sys.exit(' ')
 
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], 'c:h', ['channel=', 'help'])
+		opts, args = getopt.getopt(sys.argv[1:], 'c:hp', ['channel=', 'help'])
 	except getopt.GetoptError:
 		print('!!! Error parsing command-line options !!!')
 		usage()
@@ -263,9 +266,11 @@ def main():
 
 	for o, a in opts:
 		if o in ('-c', '--channel'):
-			OPT_channel = a
-		if o in ('-h', '--help'):
+			OPT_channels.append(a)
+		elif o in ('-h', '--help'):
 			usage()
+		elif o in ('-p', '--prune'):
+			OPT_prune = True
 
 	craftbukkit_dir = os.path.join(OPT_overlay_dir, DEF_craftbukkit_category, DEF_craftbukkit_package)
 	bukkit_dir = os.path.join(OPT_overlay_dir, DEF_bukkit_category, DEF_bukkit_package)
@@ -273,7 +278,18 @@ def main():
 	print('CraftBukkit ebuild directory: %s' % craftbukkit_dir)
 	print('Bukkit ebuild directory:      %s' % bukkit_dir)
 
-	bukkits = get_bukkits(OPT_channel)
+	if OPT_prune:
+		print('Pruning Craftbukkit ebuilds:')
+		for ebuild in glob.glob('%s/%s-*.*.ebuild' % (craftbukkit_dir, DEF_craftbukkit_package)):
+			print('  Deleting: %s' % ebuild)
+			os.remove(ebuild)
+
+		print('Pruning Bukkit ebuilds:')
+		for ebuild in glob.glob('%s/%s-*.*.ebuild' % (bukkit_dir, DEF_bukkit_package)):
+			print('  Deleting: %s' % ebuild)
+			os.remove(ebuild)
+
+	bukkits = get_bukkits(OPT_channels)
 
 	for bukkit in bukkits:
 		if bukkit.IsValid:
@@ -349,7 +365,7 @@ def usage():
 	print('')
 	print('Downloads the latest Bukkit artifact JAR.')
 	print('Usage:')
-	print('  get-bukkit.py [-c|--channel <channel>] <overlay_dir>')
+	print('  get-bukkit.py [-p|--prune] [-c|--channel <channel>] <overlay_dir>')
 	print('  get-bukkit.py [-h|--help]')
 	sys.exit(' ')
 
