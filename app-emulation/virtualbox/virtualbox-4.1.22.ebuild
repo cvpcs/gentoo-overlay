@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-emulation/virtualbox/virtualbox-4.1.18.ebuild,v 1.1 2012/06/20 16:14:50 polynomial-c Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-emulation/virtualbox/virtualbox-4.1.22.ebuild,v 1.1 2012/09/09 15:23:01 polynomial-c Exp $
 
 EAPI=4
 
@@ -47,7 +47,7 @@ RDEPEND="!app-emulation/virtualbox-bin
 		x11-libs/libXt
 		media-libs/libsdl[X,video]
 	)
-	vnc? ( >=net-libs/libvncserver-0.9.7 )
+	vnc? ( >=net-libs/libvncserver-0.9.9 )
 	java? ( || ( virtual/jre:1.7 virtual/jre:1.6 ) )"
 DEPEND="${RDEPEND}
 	>=dev-util/kbuild-0.1.999
@@ -176,7 +176,7 @@ src_prepare() {
 
 	# Fix compile error on hardened bug 339914 (disable PIE)
 	if gcc-specs-pie ; then
-		epatch "${FILESDIR}"/virtualbox_nopie.patch
+		epatch "${FILESDIR}"/${PN}-4.1.20-nopie.patch
 	fi
 
 	if use rdesktop-vrdp ; then
@@ -204,7 +204,6 @@ src_configure() {
 	else
 		myconf+=" --build-headless --disable-opengl"
 	fi
-
 	# not an autoconf script
 	./configure \
 		--with-gcc="$(tc-getCC)" \
@@ -285,6 +284,9 @@ src_install() {
 	fperms 4750 /usr/$(get_libdir)/${PN}/VBoxNetAdpCtl
 	fperms 4750 /usr/$(get_libdir)/${PN}/VBoxNetDHCP
 
+	# VBoxSVC needs to be pax-marked (bug #403453)
+	pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/VBoxSVC || die
+
 	if ! use headless ; then
 		for each in VBox{SDL,Headless} ; do
 			doins $each || die
@@ -321,12 +323,10 @@ src_install() {
 		fi
 
 		pushd "${S}"/src/VBox/Resources/OSE &>/dev/null || die
-		for size in 16 20 32 40 48 64 128 ; do
-			insinto /usr/share/icons/hicolor/${size}x${size}/apps
-			newins ${PN}-${size}px.png ${PN}.png
+		for size in 16 32 48 64 128 ; do
+			newicon -s ${size} ${PN}-${size}px.png ${PN}.png
 		done
-		insinto /usr/share/pixmaps
-		newins ${PN}-48px.png ${PN}.png
+		newicon ${PN}-48px.png ${PN}.png
 		popd &>/dev/null || die
 	else
 		doins VBoxHeadless || die
