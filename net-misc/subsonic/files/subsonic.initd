@@ -6,10 +6,11 @@ depend() {
 }
 
 start() {
+	ebegin "Starting ${SVCNAME}"
 	start-stop-daemon \
 	--start --user "${SUBSONIC_USER}" --name subsonic \
 	--env HOME="${SUBSONIC_HOME}" --exec /opt/subsonic/subsonic.sh \
-	--nicelevel "${NICELEVEL}" \
+	--nicelevel "${NICELEVEL}" --quiet \
 	-- --pidfile=${PIDFILE} \
 	--home=${SUBSONIC_HOME} \
 	--host=${SUBSONIC_HOST} \
@@ -25,8 +26,9 @@ start() {
 }
 
 stop() {
+	ebegin "Stopping ${SVCNAME}"
 	start-stop-daemon --stop --user "${SUBSONIC_USER}" \
-	--pidfile ${PIDFILE} \
+	--pidfile ${PIDFILE} --quiet \
 	--wait 30000 \
 	--progress
 	eend $?
