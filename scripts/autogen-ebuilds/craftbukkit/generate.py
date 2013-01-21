@@ -176,7 +176,7 @@ class CraftBukkitRelease:
 			if len(channel) > 0:
 				S = ( channel[0].getContent() == 'rb' )
 			if len(html_url) > 0:
-				H = html_url[0].getContent()
+				H = 'http://dl.bukkit.org' + html_url[0].getContent()
 
 			doc.freeDoc()
 			ctxt.xpathFreeContext()
