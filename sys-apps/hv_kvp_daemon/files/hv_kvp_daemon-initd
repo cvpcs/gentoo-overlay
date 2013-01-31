@@ -1,0 +1,23 @@
+#!/sbin/runscript
+
+# path to hv_kvp_daemon binary
+HV_KVP_BIN=/usr/sbin/hv_kvp_daemon
+
+depend() {
+        use clock logger
+        need localmount
+        provide hv_kvp_daemon
+}
+
+start(){
+        ebegin "Starting Hyper-V KVP daemon"
+        start-stop-daemon --start --quiet --exec $HV_KVP_BIN
+        eend $?
+}
+
+stop(){
+        ebegin "Stopping Hyper-V KVP daemon"
+        start-stop-daemon --stop --quiet $HV_KVP_BIN
+        eend $?
+}
+
