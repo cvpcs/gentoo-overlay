@@ -25,11 +25,11 @@ pkg_setup() {
 src_unpack() {
   # C files
   mkdir -p "${S}"/src
-  cp "${KERNEL_DIR}"/tools/hv/*.c "${S}"
+  cp "${KERNEL_DIR}"/tools/hv/*.c "${S}/src"
 
   # scripts
   mkdir -p "${S}"/scripts
-  cp "${KERNEL_DIR}"/tools/hv/*.sh "${S}"
+  cp "${KERNEL_DIR}"/tools/hv/*.sh "${S}/scripts"
 
   # headers
   mkdir -p "${S}"/include/linux
@@ -39,25 +39,25 @@ src_unpack() {
 src_prepare() {
   # change directories
   sed -r -i 's/\/var\/opt/\/var\/lib/g' \
-      "${S}"/src/hv_kvp_daemon.c
+      "${S}"/src/*.c
 
   # change scripts
   sed -r -i 's/(hv_(get_(dns|dhcp)_info|set_ifconfig))/\/etc\/hyperv\/\1.sh/g' \
-      "${S}"/src/hv_kvp_daemon.c
+      "${S}"/src/*.c
 }
 
 src_compile() {
   gcc \
     -I"${S}"/include \
-    "${S}"/src/hv_kvp_daemon.c \
-    -o "${S}"/src/hv_kvp_daemon
+    "${S}"/src/*.c \
+    -o "${S}"/src/${PN}
 }
 
 src_install() {
-  dosbin src/hv_kvp_daemon
+  dosbin src/${PN}
 
-  insinto /etc/hyperv
+  exeinto /etc/hyperv
   doexe "${S}"/scripts/*
 
-  newinitd "${FILESDIR}"/hv_kvp_daemon-initd hv_kvp_daemon
+  newinitd "${FILESDIR}"/${PN}-initd ${PN}
 }
