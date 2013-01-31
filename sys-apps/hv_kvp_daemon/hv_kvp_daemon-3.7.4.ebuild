@@ -49,15 +49,15 @@ src_prepare() {
 src_compile() {
   gcc \
     -I"${S}"/include \
-    "${S}"/src/*.c \
-    -o "${S}"/src/${PN}
+    "${S}"/src/hv_kvp_daemon.c \
+    -o "${S}"/src/hv_kvp_daemon
 }
 
 src_install() {
-  dosbin src/${PN}
+  dosbin src/hv_kvp_daemon
 
   insinto /etc/hyperv
   doexe "${S}"/scripts/*
 
-  newinitd "${FILESDIR}"/hv_kvp_daemon-initd ${PN}
+  newinitd "${FILESDIR}"/hv_kvp_daemon-initd hv_kvp_daemon
 }
