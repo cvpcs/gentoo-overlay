@@ -36,7 +36,7 @@ class BukkitSGMLParser(sgmllib.SGMLParser):
 		if self.in_dt and data.strip() == 'Upstream Artifacts:':
 			self.in_upstream = True
 		elif self.in_li and self.in_a and self.in_upstream:
-			if self.in_bukkit:
+			if self.in_bukkit and self.BukkitNumber == '':
 				match = self.prog.match(data)
 				if match:
 					self.BukkitNumber = match.group('build_num')

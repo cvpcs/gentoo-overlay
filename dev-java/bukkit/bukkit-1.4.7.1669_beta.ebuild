@@ -10,7 +10,7 @@ DESCRIPTION="Bukkit extendable dedicated server for Minecraft"
 HOMEPAGE="http://bukkit.org"
 
 EGIT_REPO_URI="git://github.com/Bukkit/Bukkit"
-EGIT_COMMIT="55f18605a6a7e0bce7a56ac284792c9ed5c439d8"
+EGIT_COMMIT="76d0a6702dd48e13b180fb1c1610f109d288a218"
 
 LICENSE="GPL-3"
 SLOT="0"

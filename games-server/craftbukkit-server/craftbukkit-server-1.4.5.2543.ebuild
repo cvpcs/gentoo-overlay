@@ -10,17 +10,17 @@ DESCRIPTION="CraftBukkit extendable dedicated server for Minecraft"
 HOMEPAGE="http://bukkit.org"
 
 EGIT_REPO_URI="git://github.com/Bukkit/CraftBukkit"
-EGIT_COMMIT="07338041e1c071a2c09e7e7f36889a3e8bb3ce07"
+EGIT_COMMIT="fd3a37958dbf8524877da9fa976e7af73db15856"
 
 LICENSE="LGPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE=""
 RESTRICT="mirror"
 
 DEPEND="virtual/jdk:1.6
 	>=dev-java/maven-bin-3
-	=dev-java/bukkit-1.3.2.1536_beta*"
+	=dev-java/bukkit-1.4.5.1643*"
 
 RDEPEND="virtual/jre:1.6
 	app-misc/tmux
