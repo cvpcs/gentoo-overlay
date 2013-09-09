@@ -102,7 +102,7 @@ class CraftBukkitRelease:
 		self.IsStable = s
 
 		try:
-			resp = urllib2.urlopen(h)
+			resp = get_url(h)
 			html = resp.read()
 
 			parser = BukkitSGMLParser()
@@ -152,7 +152,7 @@ class CraftBukkitRelease:
 		H = ''
 
 		try:
-			resp = urllib2.urlopen(api)
+			resp = get_url(api)
 			xml = resp.read()
 
 			doc = libxml2.parseDoc(xml.encode('UTF-8'))
@@ -193,7 +193,7 @@ def get_bukkits(channels):
 	for channel in channels:
 		api = 'http://dl.bukkit.org/api/1.0/downloads/projects/craftbukkit/artifacts/%s/?_accept=application/xml' % (channel)
 
-		resp = urllib2.urlopen(api)
+		resp = get_url(api)
 		xml = resp.read()
 
 		doc = libxml2.parseDoc(xml.encode('UTF-8'))
@@ -226,6 +226,11 @@ def add_mask(overlay_dir, mask):
 
 		if not mask_exists:
 			f.write(mask + '\n')
+
+def get_url(url):
+	req = urllib2.Request(url=url)
+	req.add_header('User-agent', 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)')
+	return urllib2.urlopen(req)
 
 def main():
 	OPT_channels = []
