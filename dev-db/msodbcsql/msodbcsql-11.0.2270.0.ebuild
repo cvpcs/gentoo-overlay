@@ -13,17 +13,17 @@ MY_LANG="en_US"
 
 DESCRIPTION="ODBC Driver for Microsoft SQL Server"
 HOMEPAGE="http://technet.microsoft.com/en-us/library/hh568451.aspx"
-SRC_URI="http://download.microsoft.com/download/7/3/1/7318E2AD-E7C5-4301-AEFA-A15EDEDACFB4/${P}.tar.gz"
+SRC_URI="http://download.microsoft.com/download/B/C/D/BCDD264C-7517-4B7D-8159-C99FC5535680/RedHat6/${P}.tar.gz"
 
 SLOT="0"
-LICENSE="MSodbcPRSLT11"
+LICENSE="MSodbcEULA11"
 KEYWORDS="~amd64"
 IUSE=""
 
 RDEPEND="
 	app-crypt/mit-krb5
 	=dev-db/unixODBC-2.3.0*
-	dev-libs/openssl:0.9.8"
+	=dev-libs/openssl-1.0.1*"
 DEPEND="${RDEPEND}"
 
 QA_PRESTRIPPED="
@@ -77,6 +77,10 @@ src_install() {
 	dosym sqlcmd-${PV} /usr/bin/sqlcmd
 
 	dolib lib64/${MY_LIB_NAME}
+
+	# setup symlinks to fix some solib resolution
+	dosym libcrypto.so.1.0.0 /usr/$(get_libdir)/libcrypto.so.10
+	dosym libssl.so.1.0.0 /usr/$(get_libdir)/libssl.so.10
 
 	dodir /opt/microsoft/${PN}/${PV}/${MY_LANG}/
 	insinto /opt/microsoft/${PN}/${PV}/${MY_LANG}/
