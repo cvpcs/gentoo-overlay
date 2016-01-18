@@ -4,25 +4,24 @@
 
 EAPI="3"
 
-inherit eutils games git-2 java-pkg-2 versionator
+inherit eutils games java-pkg-2 versionator
 
 DESCRIPTION="CraftBukkit extendable dedicated server for Minecraft"
 HOMEPAGE="http://bukkit.org"
 
-EGIT_REPO_URI="git://github.com/Bukkit/CraftBukkit"
-EGIT_COMMIT="d3eb65c2f43a4a3e69587af480d584ef6b4bad8c"
+BUILDTOOLS="${PN}-buildtools-${PV}.jar"
+SRC_URI="https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -> ${BUILDTOOLS}"
 
 LICENSE="LGPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="~*"
 IUSE=""
 RESTRICT="mirror"
 
-DEPEND="virtual/jdk:1.6
-	>=dev-java/maven-bin-3
-	=dev-java/bukkit-1.6.4.1850*"
+DEPEND="virtual/jdk:1.7
+	>=dev-java/maven-bin-3"
 
-RDEPEND="virtual/jre:1.6
+RDEPEND="virtual/jre:1.7
 	app-misc/tmux
 	sys-apps/openrc"
 
@@ -34,36 +33,19 @@ pkg_setup() {
 	games_pkg_setup
 }
 
+src_unpack() {
+	mkdir "${S}"
+	cp "${DISTDIR}"/* "${S}"/
+}
+
 src_prepare() {
-	local group
-	local artifact
-	local version
-
-	group="$(grep groupId pom.xml | head -n 1 | sed -r 's/^.*<groupId>(.*)<\/groupId>.*$/\1/')"
-	artifact="$(grep artifactId pom.xml | head -n 1 | sed -r 's/^.*<artifactId>(.*)<\/artifactId>.*$/\1/')"
-	version="$(grep version pom.xml | head -n 1 | sed -r 's/^.*<version>(.*)<\/version>.*$/\1/')"
-
-	echo "groupId=${group}" >> maven.cfg
-	echo "artifactId=${artifact}" >> maven.cfg
-	echo "version=${version}" >> maven.cfg	
-
 	cp "${FILESDIR}"/{directory,init,console,console-send}.sh . || die
 	sed -i "s/@GAMES_USER_DED@/${GAMES_USER_DED}/g" directory.sh init.sh || die
-
-	# install our bukkit jar int maven's repo
-	mvn-3.0 install:install-file \
-		-Duser.home="${S}" \
-		-Dfile=/usr/share/bukkit/lib/bukkit.jar \
-		-DgroupId=$(grep groupId /usr/share/bukkit/maven.cfg | cut -d= -f2) \
-		-DartifactId=$(grep artifactId /usr/share/bukkit/maven.cfg | cut -d= -f2) \
-		-Dversion=$(grep version /usr/share/bukkit/maven.cfg | cut -d= -f2) \
-		-Dpackaging=jar \
-		-DgeneratePom=true
 }
 
 src_compile() {
-	mvn-3.0 clean package \
-		-Duser.home="${S}"
+	MAVEN_OPTS="-Duser.home=${S}" \
+	java -jar "${BUILDTOOLS}" --rev ${PV}
 }
 
 src_install() {
@@ -74,13 +56,7 @@ src_install() {
 	dir=/usr/share/${PN}
 	dodir ${dir}
 
-	insinto ${dir}
-	doins maven.cfg
-
-	artifact=$(grep artifactId maven.cfg | cut -d= -f2)
-	version=$(grep version maven.cfg | cut -d= -f2)
-
-	java-pkg_newjar "target/${artifact}-${version}.jar" "${PN}.jar"
+	java-pkg_newjar "craftbukkit-${PV}.jar" "${PN}.jar"
 
 	java-pkg_dolauncher "${PN}" -into "${GAMES_PREFIX}" -pre "directory.sh" \
 		--main org.bukkit.craftbukkit.Main --java_args "-Xmx1024M -Xms512M  -Djava.net.preferIPv4Stack=true" --pkg_args "nogui"
