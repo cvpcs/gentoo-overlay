@@ -19,7 +19,7 @@ IUSE=""
 RESTRICT="mirror"
 
 DEPEND="virtual/jdk:1.7
-	>=dev-java/maven-bin-3"
+	dev-vcs/git"
 
 RDEPEND="virtual/jre:1.7
 	app-misc/tmux
