@@ -1,0 +1,1 @@
+craftbukkit-server.ebuild.tpl
