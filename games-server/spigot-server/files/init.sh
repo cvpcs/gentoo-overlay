@@ -16,6 +16,12 @@ depend() {
 start() {
 	ebegin "Starting Spigot server \"${SERVER}\""
 
+        # make sure that the run directory exists
+        if [ ! -d "$(dirname ${PID})" ] ; then
+                mkdir -p "$(dirname ${PID})"
+                chown games:games "$(dirname ${PID})"
+        fi
+
 	# We can't get the final PID of tmux or the exit status of a
 	# program run within it so we use the PID of the server itself and
 	# check for success with ewaitfile.
